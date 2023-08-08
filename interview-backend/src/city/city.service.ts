@@ -19,7 +19,11 @@ export class CityService {
     return await this.cityModel.findById(_id);
   }
   async findByName(cityName: string) {
-    return await this.cityModel.find({cityName: {$regex: cityName}}).limit(5);
+      var cityNameAE = cityName.replace("ae", "ä");
+      var cityNameOE = cityName.replace("oe", "ö");
+      var cityNameUE = cityName.replace("ue", "ü");
+
+    return await this.cityModel.find({cityName: {$in: [new RegExp(cityName, 'i'), new RegExp(cityNameAE, 'i'), new RegExp(cityNameOE, 'i'), new RegExp(cityNameUE, 'i')]}}).limit(5);
   }
   async update(_id: string, city: City) {
     return await this.cityModel.findByIdAndUpdate(_id, city, { new: true });
